@@ -61,5 +61,5 @@ git push origin master
 
 git checkout =revert
 
-C:\Users\Computername\.ssh
+C:\Users\Computername\.ssh \ id_rsa.pub
 
