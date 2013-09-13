@@ -1,1 +1,0 @@
-http://www.createjs.com/Docs/EaselJS/modules/EaselJS.html
