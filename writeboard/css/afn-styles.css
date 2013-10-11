@@ -1,0 +1,288 @@
+
+/*-------------------------------
+    Generated Fonts 
+-------------------------------*/
+
+@font-face {
+    font-family: 'UbuntuRegular';
+    src: url('../fonts/Ubuntu-R-webfont.eot');
+    src: url('../fonts/Ubuntu-R-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Ubuntu-R-webfont.woff') format('woff'),
+         url('../fonts/Ubuntu-R-webfont.ttf') format('truetype'),
+         url('../fonts/Ubuntu-R-webfont.svg#UbuntuRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'HelveticaNeueLTStd45Light';
+    src: url('../fonts/helveticaneueltstd-lt-webfont.eot');
+    src: url('../fonts/helveticaneueltstd-lt-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/helveticaneueltstd-lt-webfont.woff') format('woff'),
+         url('../fonts/helveticaneueltstd-lt-webfont.ttf') format('truetype'),
+         url('../fonts/helveticaneueltstd-lt-webfont.svg#HelveticaNeueLTStd45Light') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+/*-----------------------------------
+    afn Styles: Custom / Override
+-----------------------------------*/ 
+body {
+    font-family: 'HelveticaNeueLTStd45Light', san-serif;
+    font-size: 14px;
+    color: #444;
+    padding-top: 70px;
+}
+h1,h2 {
+    margin-top: 0
+}
+h1 {
+    font-family: 'UbuntuRegular', san-serif;
+    font-size: 26px;
+    color: #5b5b5b;
+}
+h2 {
+    font-family: 'UbuntuRegular', san-serif;
+    font-size: 18px;
+    color: #5b5b5b;
+}
+hr {
+    border-top: 1px solid #f5f5f5;
+    margin-top: 10px;
+    margin-bottom: 10px;    
+}
+.btn-primary {
+    background-color: #00d0dd;
+    border-color: #00a9b4;
+}
+.btn-primary.disabled {
+    background-color: #00a9b4;
+    border-color: #00a9b4;
+}
+.container > hr {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+thead {
+    text-transform: uppercase;
+}
+.header {
+    position: fixed;
+    margin-top: 0;
+    top: 0;
+    max-width: 100%;
+    width: 100%;
+    left: 0;
+    background: #2e4e62;
+    z-index: 1000;
+}
+    .logo {
+        background-image: url(../images/logo-storycaring.png);
+        background-color: transparent;
+        position: relative;
+        font-family: 'UbuntuRegular';
+        color: #1c588b;
+        font-size: 48px;
+        text-indent: -9999px;
+        width: 242px;
+        height: 50px;
+        position: relative;
+        margin: 0 20px 0 0;
+        padding: 0;
+    } 
+        .logo a {
+            display: block;
+            padding: 10px 15px 10px;
+            color: #1c588b;
+            text-decoration: none;
+        }
+    .search {
+        top: 20px;
+        position: relative;
+        margin-bottom: 14px;
+    }
+    /* Navigation */
+    .navbar {
+        margin: 0;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+    }
+    .navbar-default .navbar-brand {
+        font-family: 'UbuntuRegular';
+        color: #fff;
+        font-size: 38px;
+    } .navbar-default .navbar-brand:hover {
+        color: #fafafa;
+    }
+    .navbar-default {
+        background-color: #ff5555;
+        border: none;
+        padding: 10px 0;
+    }
+        .navbar-default .container {
+            position: relative;
+        }
+    .navbar-nav {
+        margin-top: -10px;
+        margin-bottom: -10px;
+        position: relative;
+    }
+    .nav>li>a {
+        padding: 26px 20px;
+    }
+    .navbar-default .navbar-nav>li>a {
+        color: #fff;
+        font-size: 13px;
+        font-weight: normal;
+        font-family: 'UbuntuRegular';
+    } .navbar-default .navbar-nav>li>a:hover {
+        color: #f5f5f5;
+        background-color: #e14242;
+    }
+    .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+        color: #fff;
+        background-color: #e14242;
+    }
+    
+    .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
+        background-color: #fff;
+        color: #000;
+    }
+        .navbar-default .navbar-nav>.dropdown>a .caret {
+            border-top-color: #fff;
+            border-bottom-color: #fff;
+        }
+
+.main-content {
+    padding-top: 20px;
+    padding-bottom: 50px;
+    position: relative;
+} 
+    #home {
+        background-color: #fff;
+        background-image: url(../images/geometry.png);
+        background-repeat: repeat;
+    }
+    #send-concerns {
+        background-color: #00d0dd;
+    }
+        #send-concerns hr {
+            border-top: 1px solid #00a9b4;
+        }
+    #story-list {
+        background-color: #fff;
+    }
+    #footer {
+        background-color: #292a2b;
+    }
+
+    .navbar-form {
+        float: right;
+        width: 300px;
+    }
+
+    /* Storie */
+    .send-stories {
+    }
+    .send-stories h2, .stories h2 {
+        padding-top: 14px;
+    }
+        .stories .date {
+            font-size: 12px;
+            color: #bababa;
+            font-style: italic;
+        }
+        .search-stories {
+            width: 200px;
+        }
+
+.footer {
+    color: #fff;
+}   
+.footer a {
+    color: #fff;
+}
+    .footer > .container {
+        padding-top: 30px;
+        padding-bottom: 40px;
+    }
+
+@media (min-width: 992px) {
+    .navbar-form {
+        float: right;
+        width: 300px;
+    }
+    .navbar-form .form-control {
+        border-right: none;
+        position: relative;
+    }
+    .navbar-form .btn {
+        border-left: none;
+    }
+    /*.navbar-form .btn .glyphicon {
+        background-image: url(../images/search-iconq.png);
+        background-repeat: no-repeat;
+        background-position: center center;
+        width: 20px;
+        height: 20px;
+    }*/
+} 
+@media (min-width: 768px) {    
+     .navbar-form .form-control {
+        height: auto;
+        border-right: none;
+        position: relative;
+    }
+     .navbar-form .btn {
+        border-left: none;
+    }
+    /*.navbar-form .btn .glyphicon {
+        background-image: url(../images/search-iconq.png);
+        background-repeat: no-repeat;
+        background-position: center center;
+        width: 20px;
+        height: 20px;
+    }*/
+}
+@media (min-width: 480px) {    
+     .navbar-form .form-control {
+        height: auto;
+        border-right: none;
+        position: relative;
+    }
+     .navbar-form .btn {
+        border-left: none;
+    }
+    /*.navbar-form .btn .glyphicon {
+        background-image: url(../images/search-iconq.png);
+        background-repeat: no-repeat;
+        background-position: center center;
+        width: 20px;
+        height: 20px;
+    }*/
+
+}
+@media (max-width: 700px) {
+    .navbar-form {
+        width: 100%;
+    }
+    .controls {width: 100%;}
+}
+.img-responsive {
+    display: inline-block;
+}
+@font-face {
+    font-family: 'steelfishregular';
+    src: url('../fonts/steelfish_rg-webfont.eot');
+    src: url('../fonts/steelfish_rg-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/steelfish_rg-webfont.woff') format('woff'),
+         url('../fonts/steelfish_rg-webfont.ttf') format('truetype'),
+         url('../fonts/steelfish_rg-webfont.svg#steelfishregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
