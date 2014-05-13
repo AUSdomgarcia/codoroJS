@@ -1,3 +1,6 @@
+
+http://libgdx.badlogicgames.com/showentry.html?id=6e620558-d3e8-41e3-811e-08bef00ad9d4
+
 GIT PRACTISE
 
 generate ssh
