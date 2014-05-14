@@ -1,0 +1,41 @@
+<html>
+
+<head>
+	<title>Uploader Tool</title>
+
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<script type="text/javascript" src="js/jquery-1.11.1.js"></script>
+	<script type="text/javascript" src="js/easeljs-0.7.1.min.js"></script>
+	<script type="text/javascript" src="js/H5U.js"></script>
+	
+</head>
+	<body>
+		<input type="file" id="fileId" name="files[]" multiple style="display: none" />
+		<output id="outputHolder"></output>
+		
+		<div style="width: 336px">
+		<canvas id="mcanvas" width="300" height="300" style="border: 1px blue solid;"></canvas>
+			<div class="widget"  style="width: 30px; height: auto; float: right">
+
+			<ul style="margin: 0px; padding: 0px;">
+				<li class="design"><a href='#' class="zoomOut">Z-</a></li>
+				<li class="design"><a href='#' class="zoomIn">Z+</a></li>
+				<li class="design"><a href='#' class="zoomRotLeft">R+</a></li>
+				<li class="design"><a href='#' class="zoomRotRight">R-</a></li>
+			</ul>
+				
+			</div>
+			
+		</div>
+
+		<div id="prompt" style="border: 1px solid red; width: 300px; padding: 5px;"></div>
+		<button type="button" class="browser"> Browse Picture</button>
+		
+	<script type="text/javascript">
+		var uploader = H5U.init();
+			uploader.setScaleByPercent( 0.05 );
+			uploader.setRotateByDegree( 90 );
+			uploader.displayDebug();
+	</script>
+	</body>
+</html>
