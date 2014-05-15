@@ -17,6 +17,46 @@ Uploader = function()
 {
 	var scaleValue = 0.05;
 	var rotateValue = 45;
+	var canvasName = "";
+	var fileId = "";
+	var imgLbl = "";
+	var btnId = "";
+	var canvas;
+	var stage;
+
+
+	//UI CONTROLS
+	this.setRotClass = function( left, right ){
+		$( right ).on("mouseup",function(){
+			if(!hasImage) return;
+
+			container.rotation += rotateValue;
+			stage.update();
+		});
+
+		$( left ).on("mouseup",function(){
+			if(!hasImage) return;
+			
+			container.rotation -= rotateValue;
+			stage.update();
+		});
+	}
+
+	this.setZoomClass = function( ins, out ){
+		$( out ).on("mouseup",function( evt ){
+			if(!hasImage) return;
+				container.scaleX -= scaleValue;
+				container.scaleY -= scaleValue;
+				stage.update( evt );
+		});
+
+		$( ins ).on("mouseup",function( evt ){
+			if(!hasImage) return;
+				container.scaleX += scaleValue;
+				container.scaleY += scaleValue;
+				stage.update( evt );
+		});
+	}
 
 	this.setScaleByPercent = function( scale ){
 		scaleValue = scale;
@@ -28,46 +68,77 @@ Uploader = function()
 		return this;
 	}
 
+	this.setCanvasNameId = function( _name ){
+		canvas = document.getElementById( _name );
+		stage  = new createjs.Stage(canvas);
+		createjs.Touch.enable(stage);
+		stage.enableMouseOver(10);	
+		stage.mouseMoveOutside = false;
+	}
 
-	//FILE API
-	$('#fileId').change(function(evt) {
-		var files = evt.target.files;
-		var output = [];
+	this.setImageNameId = function( _imgLbl ){
+		imgLbl = _imgLbl;
+	}
 
-	var reader = new FileReader();
+	this.setBrowseBtnId = function ( _btnId ){
+		btnId = _btnId;
+		$( btnId ).click(function(){
+			$( fileId ).click();
+		});
+	}
 
-		for (var i = 0, f; f = files[i]; i++) 
-		{
-		    if(!f.type.match('image.*')) continue;	
+	this.setSaveBtnId = function( saveId ){
+		$( saveId ).click(function(){
+			var dataURL = canvas.toDataURL();
+			console.log(dataURL);
+			window.location.href = dataURL;
+		});
+	}
 
-			function processImg(args) {
-				return function(e) {
-				var span = document.createElement('span');
-					span.innerHTML = ['<img src="', e.target.result,
-	        		'" title="', encodeURIComponent( args.name ), '"/>'].join('');
-					//document.getElementById('outputHolder').insertBefore(span, null);
-					copyToCanvas(e.target.result);
+	this.setFileId = function( _linkage ){
+		fileId = _linkage;
+		//FILE API
+		$( fileId ).change(function(evt) {
+			var files = evt.target.files;
+
+			var output = [];
+
+		var reader = new FileReader();
+			for (var i = 0, f; f = files[i]; i++) 
+			{
+			    if(!f.type.match('image.*')) continue;	
+
+				function processImg(args) {
+					return function(e) {
+					var span = document.createElement('span');
+						span.innerHTML = ['<img src="', e.target.result,
+		        		'" title="', encodeURIComponent( args.name ), '"/>'].join('');
+						//document.getElementById('outputHolder').insertBefore(span, null);
+						copyToCanvas(e.target.result);
+					}
 				}
+
+				reader.onload = processImg(f);
+				reader.readAsDataURL(f);
+
+				//html label
+				output.push('<strong>', encodeURIComponent(f.name),'</strong> (', f.type || 'n/a', ') - ',
+		        f.size, ' bytes, last modified: ',
+		        f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a');
+				
+				//$('#outputHolder').append('<ul>'+ output.join('') + '</ul>' );
+				$( imgLbl ).html( output.join('') );
 			}
-
-			reader.onload = processImg(f);
-			reader.readAsDataURL(f);
-
-			//html label
-			output.push('<strong>', encodeURIComponent(f.name),'</strong> (', f.type || 'n/a', ') - ',
-	        f.size, ' bytes, last modified: ',
-	        f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a');
-			
-			//$('#outputHolder').append('<ul>'+ output.join('') + '</ul>' );
-			$('#prompt').html( output.join('') );
-		}
-	});
+		});
+	}
 
 	//Canvas
 	var hasImage = false;
 	var bitmapHolder;
 	var imgConvert;
 	var container = new createjs.Container();
+
+	var shape = new createjs.Shape();
 
 	function copyToCanvas( value ){
 		if(bitmapHolder){
@@ -85,6 +156,10 @@ Uploader = function()
 		imgConvert.onload = bitmapReady;
 		imgConvert.src = value;
 
+ 		shape.graphics.beginFill("#fff").drawRect(0, 0, canvas.width, canvas.height);
+ 		stage.addChild(shape);
+ 		//shape.graphics.clear();
+
 		function bitmapReady(){
 			hasImage = true;
 			bitmapHolder = new createjs.Bitmap(imgConvert);
@@ -101,6 +176,7 @@ Uploader = function()
 		}
 	}
 
+	//MOUSE EVENTS
 	container.on("mousedown", function(evt) {
 		if(!hasImage) return;
 
@@ -124,47 +200,8 @@ Uploader = function()
 	});
 
 
-	$('.browser').click(function(){
-		$('#fileId').click();
-	});
-
-	//Controls
-	$('.zoomOut').on("mouseup",function( evt ){
-		if(!hasImage) return;
-
-		container.scaleX -= scaleValue;
-		container.scaleY -= scaleValue;
-		stage.update( evt );
-	});
-	$('.zoomIn').on("mouseup",function( evt ){
-		if(!hasImage) return;
-
-		container.scaleX += scaleValue;
-		container.scaleY += scaleValue;
-		stage.update( evt );
-	});
-	$('.zoomRotRight').on("mouseup",function(){
-		if(!hasImage) return;
-
-		container.rotation += rotateValue;
-		stage.update();
-	});
-	$('.zoomRotLeft').on("mouseup",function(){
-		if(!hasImage) return;
-		
-		container.rotation -= rotateValue;
-		stage.update();
-	});
-
 	//CreateJS init
-	var canvas  = document.getElementById("mcanvas");
-	var stage 	= new createjs.Stage(canvas);
-		stage = new createjs.Stage(canvas);
 	
-	createjs.Touch.enable(stage);
-	stage.enableMouseOver(10);	
-	stage.mouseMoveOutside = false;
-
 	this.displayDebug = function(){
 		if(!stage) return;
 		var text = new createjs.Text("HTML5 uploader version 1 \n" + "  rotateValue: " + rotateValue +
