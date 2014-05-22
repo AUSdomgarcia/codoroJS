@@ -10,7 +10,7 @@
 ul li{
 	display: inline-block;
 }
-.browseBtn {
+#browseBtn {
 	font-size: 15px;
    	padding: 10px;
 	background-color: #fff;
@@ -19,7 +19,7 @@ ul li{
 	cursor: pointer;
 }
 
-.saveBtn{
+#saveBtn{
 	font-size: 15px;
    	padding: 10px;
 	background-color: #fff;
@@ -27,3 +27,21 @@ ul li{
 	cursor: pointer;
 	float: right;
 }
+
+.error{
+	padding-top: 141px;
+	padding-bottom: 140px;
+	width: 301px;
+	text-align: center;
+	position: absolute;
+	background-color: #FF0000;
+	z-index: 999;
+	top: 0px;
+	left: 0px;
+	font-family: Arial;
+	font-weight: 800;
+}
+
+
+
+

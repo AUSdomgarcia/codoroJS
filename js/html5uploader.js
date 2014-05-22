@@ -1,4 +1,4 @@
-html5uploader = function(id){
+html5uploader = function(id) {
 	var uploader = H5u.init("#mcanvas", {
 				attachAPI: "#fileId",
 				label: "#imgDetails",
@@ -17,12 +17,11 @@ html5uploader = function(id){
 	uploader.displaySummary();
 	uploader.renderCanvas();
 	uploader.onSave = function( base64 ){
-		window.location.href = base64;\
+		window.location.href = base64;
 	}
 }
 
-
-
+//origin
 H5u = (function(){
 	var _ins;
 	
