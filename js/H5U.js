@@ -1,28 +1,3 @@
-html5uploader = function(id){
-	var uploader = H5u.init("#mcanvas", {
-				attachAPI: "#fileId",
-				label: "#imgDetails",
-				setrotationbydegree: 45,
-				scalebypercent: 0.05,
-
-				btnProp: { 
-					browse:  "#browseBtn",
-					  save:  "#saveBtn",
-					  zoom: ["#zoomOut","#zoomIn"],
-					rotate: ["#zoomRotLeft","#zoomRotRight"]
-				}
-			}
-	);
-
-	uploader.displaySummary();
-	uploader.renderCanvas();
-	uploader.onSave = function( base64 ){
-		window.location.href = base64;\
-	}
-}
-
-
-
 H5u = (function(){
 	var _ins;
 	
