@@ -7,8 +7,8 @@
 	      rotateValue : 90,
 	      zoomInCaption : 'z+',
 	      zoomOutCaption : 'z-',
-	      rotateIncrease : '<@',
-	      rotateDecrease : '@>' }*/
+	      rotateIncreaseCaption : '<@',
+	      rotateDecreaseCaption : '@>' }*/
 
 
 	$("#container")
