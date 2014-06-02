@@ -11,8 +11,8 @@ jQuery.fn.h5u = function(obj)
 			zoomInCaption : 'z+',
 			zoomOutCaption : 'z-',
 
-			rotateIncrease : '<@',
-			rotateDecrease : '@>',
+			rotateIncreaseCaption : '<@',
+			rotateDecreaseCaption : '@>',
 		}
 
 	$.extend(option,obj);
@@ -34,8 +34,8 @@ jQuery.fn.h5u = function(obj)
 			}
 
 			if(option.hasRotation){
-				rightNav.append("<button id='rotleft' class='right-nav-des'>"+option.rotateIncrease+"</button>"
-							   +"<button id='rotright' class='right-nav-des'>"+option.rotateDecrease+"</button>");
+				rightNav.append("<button id='rotleft' class='right-nav-des'>"+option.rotateIncreaseCaption+"</button>"
+							   +"<button id='rotright' class='right-nav-des'>"+option.rotateDecreaseCaption+"</button>");
 			}
 
 			container.append("<canvas id='canvas-base' width='"+canvasWidth
