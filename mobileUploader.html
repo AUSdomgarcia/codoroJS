@@ -2,132 +2,40 @@
 
 <head>
 	<title>Uploader Tool</title>
-
-	<link rel="stylesheet" type="text/css" href="main.css">
-	<script type="text/javascript" src="js/jquery-1.11.1.js"></script>
-	<script type="text/javascript" src="js/easeljs-0.7.1.min.js"></script>
-	<script type="text/javascript" src="js/html5uploader.js"></script>
-	
+	<link rel="stylesheet" type="text/css" href="css/template.css">
 </head>
-	<meta name="viewport" content="width=device-width, user-scalable=no" />
-	<body style=" background-color: #000;">
- 		<input type="file" id="fileId" name="files[]" multiple style="display: none" />
-		
-		<div style="width: 336px; position: absolute; top: 50px; left: 50px;">
+	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 
-		<canvas id="mcanvas" width="300" height="300" style="
-							  border: 1px blue solid;
-							  background:url('img/image-bg.png') center;
-							  " ></canvas>
-
-		<div id="popUp" class="error">INVALID ENTRY</div>
-
-		<div class="widget"  style="width: 30px; height: auto; float: right">
-		<ul style="margin: 0px; padding: 0px;">
-				<li> <button id ="zoomOut" class="des">Z-</button> </li>
-				<li> <button id ="zoomIn" class="des">Z+</button> </li>
-				<li> <button id ="zoomRotRight" class="des">R+</button> </li>
-				<li> <button id ="zoomRotLeft" class="des">R-</button> </li>
-			</ul>
-		</div>
-		
-		<div id="imgDetails" style="border: 1px solid red; font-family: Arial; width: 290px; padding: 5px; color: #fff; word-wrap: break-word"></div>
-
-		<button type="button" style="display: none">Browse Picture</button>
-			<div id ="browseBtn"> Browse File.. </div>
-			<div id ="saveBtn"> Save File.. </div>
-		</div>
-
+	<body>
+ 	<script type="text/javascript" src="js/jquery-1.11.1.js"></script>
+	<script type="text/javascript" src="js/easeljs-0.7.1.min.js?=1"></script>
+	<script type="text/javascript" src="js/hammer.js"></script>
+	<script type="text/javascript" src="js/h5uploader.js"></script>
 
 	<div id="container"></div>
 	<script type="text/javascript">
-		var h5u = html5uploader("#container");
 
-		//Arguments type
-		/* 
-		var uploader = H5u.init("#mcanvas", { 
-					attachAPI: "#fileId",
-					setrotationbydegree: 25,
-					scalebypercent: 0.05,
+		/*	var option = {
+			hasRotation : true,
+			hasZoom     : true,
+			hasPinch	: true,
+			scaleValue  : 0.05,
+			rotateValue : 90,
+			zoomInCaption : 'z+',
+			zoomOutCaption : 'z-',
 
-					btnProp: { 
-						browse:  "#browseBtn",
-						  save:  "#saveBtn",
-						  zoom: ["#zoomIn","#zoomOut"] ,
-						rotate: ["#zoomRotLeft","#zoomRotRight"]
-					}
-				}
-		);
-		uploader.renderCanvas();
-		uploader.onSave = function( base64 ){
-			window.location.href = base64;
-		}
-		*/
-		
-		//Function type
-		
-		/*var uploader = H5u.init();
-		uploader.setCanvasName("#mcanvas");
-		uploader.setLabel("#imgDetails");
-		uploader.setAPI("#fileId");
-
-		uploader.setRotationByDeg(25);
-		uploader.setScaleByPercent(0.5);
-		
-		uploader.setBtnBrowse("#browseBtn");
-		uploader.setBtnSave("#saveBtn");
-		uploader.setBtnZoom( ["#zoomIn","#zoomOut"] );
-		uploader.setBtnRotate( ["#zoomRotLeft","#zoomRotRight"] );
-
-		uploader.displaySummary();
-		uploader.renderCanvas();
-		uploader.onSave = function( base64 ){
-			window.location.href = base64;
+			rotateIncrease : '<@',
+			rotateDecrease : '@>',
 		}*/
 
-		//Mixed1 Type
-		/*H5u.init( "#mcanvas", {
-					attachAPI: "#fileId",
-					label: "#imgDetails",
-					setrotationbydegree: 25,
-					scalebypercent: 0.05,
+		$("#container")
+			.h5u({ scaleValue:0.10 })
+			.addCallback = function(val) {
+				console.log(val);
+				//window.location.href = val;
+			};
+	</script>
 
-					btnProp: {
-						browse:  "#browseBtn",
-						  save:  "#saveBtn"
-					}
-				});
 
-		H5u.init().setBtnZoom( ["#zoomIn","#zoomOut"] );
-		H5u.init().setBtnRotate( ["#zoomRotLeft","#zoomRotRight"] );
-		
-		H5u.init().displaySummary();
-		H5u.init().renderCanvas();
-		H5u.init().onSave = function( base64 ){
-			window.location.href = base64;
-		}*/
-
-		//Mixed2 Type
-		
-		/*
-		H5u.init( "#mcanvas", {
-			attachAPI: "#fileId",
-			label: "#imgDetails",
-			setrotationbydegree: 25,
-			scalebypercent: 0.05,
-			btnProp: {
-				browse:  "#browseBtn",
-				  save:  "#saveBtn"
-			}
-		});
-
-		H5u.init().onSave = function( base64 ){ window.location.href = base64; }
-		var uploader = H5u.init();
-		uploader.setBtnZoom( ["#zoomIn","#zoomOut"] );
-		uploader.setBtnRotate( ["#zoomRotLeft","#zoomRotRight"] );
-		uploader.displaySummary();
-		uploader.renderCanvas();
-		*/
-		</script>
 	</body>
 </html>
