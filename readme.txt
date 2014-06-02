@@ -1,16 +1,20 @@
 <script type="text/javascript">
-	var uploader = H5U.init();
-	uploader.setScaleByPercent(0.05);
-	uploader.setRotateByDegree(25);
-	
-	uploader.setCanvasNameId("mcanvas");
-	uploader.setImageNameId("#imgName");
-	uploader.setFileId("#fileId");
-	uploader.setBrowseBtnId(".browseBtn"); //setBtnClass
-	uploader.setSaveBtnId(".saveBtn");
-	
-	uploader.setRotClass(".zoomRotLeft", ".zoomRotRight");
-	uploader.setZoomClass(".zoomIn", ".zoomOut");
-	
-	uploader.displayDebug();
+	/*var option = {
+	      hasRotation : true,
+	      hasZoom     : true,
+	      hasPinch	: true,
+	      scaleValue  : 0.05,
+	      rotateValue : 90,
+	      zoomInCaption : 'z+',
+	      zoomOutCaption : 'z-',
+	      rotateIncrease : '<@',
+	      rotateDecrease : '@>' }*/
+
+
+	$("#container")
+	.h5u({ scaleValue:0.10 })
+	.addCallback = function(val) {
+		console.log(val);
+		window.location.href = val;
+	};
 </script>
