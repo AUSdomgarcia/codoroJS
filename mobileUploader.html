@@ -13,6 +13,7 @@
 	<script type="text/javascript" src="js/h5uploader.js"></script>
 
 	<div id="container"></div>
+	<button id="browse-btn">button</button>
 	<script type="text/javascript">
 
 		/*	var option = {
@@ -30,10 +31,13 @@
 
 		$("#container")
 			.h5u({ scaleValue:0.10 })
-			.addCallback = function(val) {
-				console.log(val);
-				//window.location.href = val;
-			};
+			.addCallback( function (data) {
+				console.log(data);
+				alert("custom callback");
+			});
+
+		$("#container");
+
 	</script>
 
 

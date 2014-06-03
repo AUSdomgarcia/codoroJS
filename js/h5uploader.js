@@ -1,7 +1,7 @@
 jQuery.fn.h5u = function(obj) 
 {
-	var version = '1.1.4';
-	var el = $(this[0]);
+	var version = '1.1.5';
+	this.el = $(this[0]);
 		var option = {
 			hasRotation : true,
 			hasZoom     : true,
@@ -17,16 +17,18 @@ jQuery.fn.h5u = function(obj)
 
 	$.extend(option,obj);
 
-		this.HTMLview = function(el)
+	this._callback = function () {}
+
+		this.HTMLview = function()
 		{
-			var container = $(el);
-				container.addClass('canvas-size');
-			var canvasWidth = container.width();
-			var canvasHeight = container.height();
+			// var container = el;
+				this.el.addClass('canvas-size');
+			var canvasWidth = this.el.width();
+			var canvasHeight = this.el.height();
 
 			
-			container.append("<div class='right-nav'></div>");
-			var rightNav = $('.right-nav');
+			this.el.append("<div class='right-nav'></div>");
+			var rightNav = self.el.find('.right-nav');
 
 			if(option.hasZoom){
 				rightNav.append("<button id='zoomin' class='right-nav-des'>"+option.zoomInCaption+"</button>"
@@ -38,30 +40,30 @@ jQuery.fn.h5u = function(obj)
 							   +"<button id='rotright' class='right-nav-des'>"+option.rotateDecreaseCaption+"</button>");
 			}
 
-			container.append("<canvas id='canvas-base' width='"+canvasWidth
+			this.el.append("<canvas id='canvas-base' width='"+canvasWidth
 							+"' height='"+canvasHeight+"'></canvas>");
 
-			container.append("<input type='file' id='file-input' name='files[]' multiple/>")
+			this.el.append("<input type='file' id='file-input' name='files[]' multiple/>")
 					 .append("<br style='clear:both'/>")
 					 .append("<div style='width: auto;'>"
 					 		+"<button id='browse-btn' class='bottom-nav'>Browse File</button>"
 					 		+"<button id='submit-btn' class='bottom-nav'>Submit Entry</button>"
 					 		+"</div>");
 
-			container.append("<br style='clear:both;'/><p>version "+version+"</p>");
+			this.el.append("<br style='clear:both;'/><p>version "+version+"</p>");
 		}
 
-		this.initCanvas = function(el)
+		this.initCanvas = function()
 		{
 			var that = this;
-			$('#browse-btn').on("mouseup",function( evt ){
-				$('#file-input').click();
+			this.el.find('#browse-btn').on("mouseup",function( evt ){
+				self.el.find('#file-input').click();
 			});
 
-			$('#submit-btn').on("mouseup",function( evt ){
+			this.el.find('#submit-btn').on("mouseup",function( evt ){
 				if(!hasImg) return;
 				var dataURL = canvas.toDataURL();
-				self.addCallback(dataURL);
+				self._callback(dataURL);
 			});
 
 			//Canvas 
@@ -134,7 +136,7 @@ jQuery.fn.h5u = function(obj)
 			
 			this.controls = function(){
 				//scale
-				$('#zoomout').on("mouseup",function( evt ){
+				self.el.find('#zoomout').on("mouseup",function( evt ){
 					if(!hasImg) return;
 						if(cont.scaleX<0.3)return;
 						cont.scaleX -= option.scaleValue;
@@ -142,7 +144,7 @@ jQuery.fn.h5u = function(obj)
 						stage.update( evt );
 
 				});
-				$('#zoomin').on("mouseup",function( evt ){
+				self.el.find('#zoomin').on("mouseup",function( evt ){
 					if(!hasImg) return;
 						
 						cont.scaleX += option.scaleValue;
@@ -152,13 +154,13 @@ jQuery.fn.h5u = function(obj)
 				});
 
 				//rotation
-				$('#rotright').on("mouseup",function(){
+				self.el.find('#rotright').on("mouseup",function(){
 					if(!hasImg) return;
 						cont.rotation+= option.rotateValue;
 						stage.update();
 				});
 
-				$('#rotleft').on("mouseup",function(){
+				self.el.find('#rotleft').on("mouseup",function(){
 					if(!hasImg) return;
 						cont.rotation-= option.rotateValue;
 						stage.update();
@@ -230,7 +232,7 @@ jQuery.fn.h5u = function(obj)
 	  			});
 			}
 
-			$('#file-input').change( function(evt){
+			self.el.find('#file-input').change( function(evt){
 				var fl = evt.target.files;
 				var o = [];
 				var r = new FileReader();
@@ -249,13 +251,16 @@ jQuery.fn.h5u = function(obj)
 			that.controls();
 		}
 
-		this.addCallback = function() {
-
+		this.addCallback = function(callback) {
+			if (typeof callback == "function") {
+				self._callback = callback;
+			}
+			return self;
 		}
 
 	var self = this;
-	self.HTMLview(el);
-	self.initCanvas(el);
+	self.HTMLview();
+	self.initCanvas();
 	return this;
 };
 
