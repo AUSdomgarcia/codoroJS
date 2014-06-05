@@ -66,5 +66,6 @@ C:\Users\Computername\.ssh \ id_rsa.pub
 
 git reset --soft HEAD~1
 git reset
+g
 
 
