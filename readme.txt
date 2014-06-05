@@ -10,11 +10,9 @@
 	      rotateIncreaseCaption : '<@',
 	      rotateDecreaseCaption : '@>' }*/
 
-
 	$("#container")
-	.h5u({ scaleValue:0.10 })
-	.addCallback = function(val) {
-		console.log(val);
-		window.location.href = val;
-	};
+		.h5u({ scaleValue:0.10 })
+		.addCallback( function (data) {
+			console.log("base64:",data);
+		});
 </script>
