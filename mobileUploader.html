@@ -11,6 +11,8 @@
 	<script type="text/javascript" src="js/easeljs-0.7.1.min.js?=1"></script>
 	<script type="text/javascript" src="js/hammer.js"></script>
 	<script type="text/javascript" src="js/h5uploader.js"></script>
+	<script type="text/javascript" src="js/base64.min.js"></script>
+
 
 	<div id="container"></div>
 	<script type="text/javascript">
@@ -27,7 +29,7 @@
 			rotateIncreaseCaption : '<@',
 			rotateDecreaseCaption : '@>',
 		}*/
-
+		
 		$("#container")
 			.h5u({ scaleValue:0.10,
 				   wurl : "http://nwshare.ph/goldilocks/goldigoodtimes/easel/servertest.php"
@@ -35,7 +37,6 @@
 			.addCallback( function (data) {
 				console.log( data );
 			});
-
 	</script>
 
 

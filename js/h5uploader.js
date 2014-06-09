@@ -49,8 +49,9 @@ jQuery.fn.h5u = function(obj)
 			this.el.append("<canvas id='h5u-canvas-base' width='"+canvasWidth
 							+"' height='"+canvasHeight+"'></canvas>");
 
-			this.el.append("<input type='file' id='h5u-file-input' name='files[]' multiple/>"
-					 		+"<br style='clear:both'/>"
+			this.el.append("<form id='form1' enctype='multipart/form-data' method='post' action='upload.php'>");
+
+			this.el.append("<input type='file' id='h5u-file-input' name='files'/>"
 					 		+"<div style='width: auto;'>"
 
 					 		//preloader
@@ -62,9 +63,11 @@ jQuery.fn.h5u = function(obj)
 							+"<button id='h5u-browse-btn' class='h5u-bottom-nav'>Browse File</button>"
 					 		+"<button id='h5u-submit-btn' class='h5u-bottom-nav'>Submit Entry</button>"
 					 		+"</div>");
+
+			this.el.append("</form>");
+			
 			//version
 			this.el.append("<br style='clear:both;'/><p>version "+version+"</p>");
-
 			this.el.find(".h5u-tpreload-wrapper").hide();
 		}
 
@@ -78,44 +81,37 @@ jQuery.fn.h5u = function(obj)
 					curVal = Math.floor(curVal);
 					self.el.find('.h5u-error-content').html( curVal + "%" );
 			}
+			//FOCUS HERE! added 4 events
+			this.uploadProgress = function(evt){
+				var percentComplete;
+				if(evt.lengthComputable){
+					percentComplete = Math.round((evt.loaded * 90 )/evt.total);
+					that.updatePreloader( percentComplete );
+				} else {
+					console.log( 'unable to compute');
+				}
+			}
+			this.uploadComplete = function(){
+				that.updatePreloader( 100 );
+				setTimeout(function(){
+				document.getElementById("h5u-zoomin").disabled=false;
+				document.getElementById("h5u-zoomout").disabled=false;
+				document.getElementById("h5u-rotleft").disabled=false;
+				document.getElementById("h5u-rotright").disabled=false;
+				document.getElementById("h5u-browse-btn").disabled=false;
+				document.getElementById("h5u-submit-btn").disabled=false;
 
-			this.processAjax = function(imageB64) {
-				var request = $.ajax({
-					headers: {
-				        Accept : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
-				    },
-					xhr: function() {
-						var _xhr;
-						if (window.XMLHttpRequest) {
-						// code for IE7+, Firefox, Chrome, Opera, Safari
-							_xhr=new XMLHttpRequest();
-						} else { // code for IE6, IE5
-							_xhr=new ActiveXObject("Microsoft.XMLHTTP");
-						}
-					    _xhr.upload.addEventListener("progress", function(evt) {
-					        if (evt.lengthComputable) {
-					            var percentComplete = ( evt.loaded / evt.total ) * 100 ;
-					            //preloader update
-					          	that.updatePreloader( percentComplete );
-					        }
-					   	}, false );
-						return _xhr;
-					},
+					self.find("#h5u-error-wrapper").hide();
+					isProcessing = false;
+					self._callback("upload complete");
+				},1000);
+			}
 
-					type: "POST",
-				  	url: option.wurl.toString() , // "http://nwshare.ph/goldilocks/goldigoodtimes/easel/servertest.php",
-					processData: true,
-					cache: false,
-					contentType: "application/x-www-form-urlencoded;charset=UTF-8",
-				  	data: imageB64,
-
-					success: function(){
-						self.find("#h5u-error-wrapper").hide();
-						console.log('loaded');
-					}
-				});
-				//request.done( function ( msg ) { console.log("request-successful", msg ) });
-				request.fail( function( jqXHR, textStatus ) { console.log("request-error", textStatus ) } );
+			this.uploadFailed = function(){
+				alert('There was an error attempting to upload the file.');
+			}
+			this.uploadCanceled = function(){
+				alert('The upload has been canceled by the user or the browser dropped the connection');	
 			}
 
 			this.dataURItoBlob = function(dataURI) {
@@ -134,26 +130,56 @@ jQuery.fn.h5u = function(obj)
 				for (var i = 0; i < byteString.length; i++) {
 				    ia[i] = byteString.charCodeAt(i);
 				}
-
 				// write the ArrayBuffer to a blob, and you're done
 				return new Blob([ab],{type: mimeString});
 			}
 
+			this.postForm = function ( blob ){
+				var fd = new FormData();
+				fd.append('files', blob , file_name );
+				
+				var xhr;
+				if (window.XMLHttpRequest) {
+					xhr=new XMLHttpRequest();
+				} else {
+					xhr=new ActiveXObject("Microsoft.XMLHTTP");
+				}
+
+				xhr.upload.addEventListener('progress', that.uploadProgress,false);
+				xhr.addEventListener('load',  that.uploadComplete,false);
+				xhr.addEventListener('error', that.uploadFailed,false);
+				xhr.addEventListener('abort', that.uploadCanceled,false);
+				xhr.open('POST', 'upload.php');
+				xhr.send(fd);
+			}
+
+
 			this.el.find('#h5u-browse-btn').on("mouseup",function( evt ){
+				if(isProcessing) return;
 				self.el.find('#h5u-file-input').click();
 			});
 
 			this.el.find('#h5u-submit-btn').on("mouseup",function( evt ){
 				if(!hasImg) return;
+				if(isProcessing) return;
+
+				document.getElementById("h5u-zoomin").disabled=true;
+				document.getElementById("h5u-zoomout").disabled=true;
+				document.getElementById("h5u-rotleft").disabled=true;
+				document.getElementById("h5u-rotright").disabled=true;
+
+				document.getElementById("h5u-browse-btn").disabled=true;
+				document.getElementById("h5u-submit-btn").disabled=true;
+
 				var dataURL = canvas.toDataURL();
 				var binary = that.dataURItoBlob( dataURL );
 				
 				self.el.find(".h5u-tpreload-wrapper").stop().slideDown(
 					500, 
-					function(){ 
-						//self._callback( binary );
+					function(){  // self._callback( binary ); @args to external
+						isProcessing = true;
 						that.updatePreloader(1);
-						self.processAjax( dataURL );
+						self.postForm( binary );
 						self.el.find("#h5u-error-wrapper").show();
 					}
 				);
@@ -220,12 +246,9 @@ jQuery.fn.h5u = function(obj)
 				cont.x = canvas.width/2;
 				cont.y = canvas.height/2;
 				stage.addChild(cont);
-
 				
-
 				var prop = { x: cont.getBounds().width/2, y: cont.getBounds().height/2 };
 				originalRegistry.push(prop);
-
 				stage.update();
 			}
 			
@@ -233,6 +256,7 @@ jQuery.fn.h5u = function(obj)
 				//scale
 				self.el.find('#h5u-zoomout').on("mouseup",function( evt ){
 					if(!hasImg) return;
+					if(isProcessing) return;
 						if(cont.scaleX<0.3)return;
 						cont.scaleX -= option.scaleValue;
 						cont.scaleY -= option.scaleValue;
@@ -241,7 +265,7 @@ jQuery.fn.h5u = function(obj)
 				});
 				self.el.find('#h5u-zoomin').on("mouseup",function( evt ){
 					if(!hasImg) return;
-						
+					if(isProcessing) return;
 						cont.scaleX += option.scaleValue;
 						cont.scaleY += option.scaleValue;
 						stage.update( evt );
@@ -251,12 +275,14 @@ jQuery.fn.h5u = function(obj)
 				//rotation
 				self.el.find('#h5u-rotright').on("mouseup",function(){
 					if(!hasImg) return;
+					if(isProcessing) return;
 						cont.rotation+= option.rotateValue;
 						stage.update();
 				});
 
 				self.el.find('#h5u-rotleft').on("mouseup",function(){
 					if(!hasImg) return;
+					if(isProcessing) return;
 						cont.rotation-= option.rotateValue;
 						stage.update();
 				});
@@ -328,7 +354,8 @@ jQuery.fn.h5u = function(obj)
 			}
 
 			self.el.find('#h5u-file-input').change( function(evt){
-				var fl = evt.target.files;
+				var fl = evt.target.files; 
+					file_name = evt.target.files[0].name;
 				var o = [];
 				var r = new FileReader();
 
@@ -344,8 +371,6 @@ jQuery.fn.h5u = function(obj)
 				}
 			} );
 			that.controls();
-
-
 		}
 
 		this.addCallback = function(callback) {
@@ -354,23 +379,14 @@ jQuery.fn.h5u = function(obj)
 			}
 			return self;
 		}
-
+		
+	var file_name;
+	var isProcessing = false;
 	var self = this;
 	self.HTMLview();
 	self.initCanvas();
 	return this;
 };
-
-
-
-/*cont.on("mouseout", function(evt) {
-	if(!hasImg) return;
-	$("body").css({ cursor: "default" });
-	stage.update();
-});
-for( var o in option )
-	console.log(o, option[o]);
-*/
 
 
 
