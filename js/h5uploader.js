@@ -49,7 +49,7 @@ jQuery.fn.h5u = function(obj)
 			this.el.append("<canvas id='h5u-canvas-base' width='"+canvasWidth
 							+"' height='"+canvasHeight+"'></canvas>");
 
-			this.el.append("<form id='form1' enctype='multipart/form-data' method='post' action='upload.php'>");
+			this.el.append("<form id='form1' enctype='multipart/form-data' method='post' action='"+ option.wurl +"'>");
 
 			this.el.append("<input type='file' id='h5u-file-input' name='files'/>"
 					 		+"<div style='width: auto;'>"
@@ -238,8 +238,28 @@ jQuery.fn.h5u = function(obj)
 
 			this.bitmapReady = function (){
 				bitmapHolder = new createjs.Bitmap(imgConvert);
-				cont.addChild(bitmapHolder);
+				
+				//Resizing bitmaps
+				console.log( bitmapHolder.getBounds().width, bitmapHolder.getBounds().height );
+				
+				var bmpWidth = bitmapHolder.getBounds().width;
+				var bmpHeight = bitmapHolder.getBounds().height;
 
+				var bmpScaleReducer;
+
+				if( (bmpWidth>canvas.width) || (bmpHeight>canvas) ){
+					if(bmpWidth>bmpHeight) {
+						bmpScaleReducer = canvas.width/bmpWidth;
+						bitmapHolder.scaleX = bmpScaleReducer;
+						bitmapHolder.scaleY = bmpScaleReducer;
+					} else {
+						bmpScaleReducer = canvas.height/bmpHeight;
+						bitmapHolder.scaleX = bmpScaleReducer;
+						bitmapHolder.scaleY = bmpScaleReducer;
+					}
+				}
+
+				cont.addChild(bitmapHolder);
 				cont.regX = cont.getBounds().width/2;
 				cont.regY = cont.getBounds().height/2;
 
@@ -248,8 +268,8 @@ jQuery.fn.h5u = function(obj)
 				stage.addChild(cont);
 				
 				var prop = { x: cont.getBounds().width/2, y: cont.getBounds().height/2 };
-				originalRegistry.push(prop);
-				stage.update();
+					originalRegistry.push(prop);
+					stage.update();
 			}
 			
 			this.controls = function(){
@@ -269,7 +289,6 @@ jQuery.fn.h5u = function(obj)
 						cont.scaleX += option.scaleValue;
 						cont.scaleY += option.scaleValue;
 						stage.update( evt );
-
 				});
 
 				//rotation
@@ -280,69 +299,75 @@ jQuery.fn.h5u = function(obj)
 						stage.update();
 				});
 
-				self.el.find('#h5u-rotleft').on("mouseup",function(){
+				self.el.find('#h5u-rotleft').on("mouseup",function( evt ){
 					if(!hasImg) return;
 					if(isProcessing) return;
 						cont.rotation-= option.rotateValue;
-						stage.update();
+						stage.update( evt );
 				});
 
-				var isResizing = false;
+				var isPinching = false;
+				var evtStageX, evtStageY;
 
 				cont.on("mousedown", function(evt) {
 					if(!hasImg) return;
-					this.offset = {x:this.x-evt.stageX, y:this.y-evt.stageY};		
+						cont.offset = { 
+							x: cont.x - evt.stageX, 
+				            y: cont.y - evt.stageY };
 				});
 
 				cont.on("pressmove", function(evt) {
 					if(!hasImg) return;
-					if(isResizing){
-
-					}else{
-						this.x = evt.stageX+ this.offset.x;
-						this.y = evt.stageY+ this.offset.y;
+					if(!isPinching){
+						cont.x = evt.stageX+ cont.offset.x;
+						cont.y = evt.stageY+ cont.offset.y;
 						$("body").css({ cursor: "pointer" });
-						//stage.update();
 					}
 				});
 
-				var newScale;
-				var newRotation;
-
-				var last_scale;
-				var last_rotation;
-
+				var newScale, newRotation, last_scale, last_rotation;
+				
 				Hammer(canvas, {
 					preventDefault		: true,
-					transformMinScale   : 0.01,
+					transformMinScale	: 0.01,//0.01
+					
+					doubleTapDistance	: 20,//20,
+					holdTimeout			: 500,//500,
+					dragMaxTouches		: 1,
+
+					dragMinDistance     : 10,//10,
+					tapMaxDistance		: 10,//10,
+
+					dragLockMinDistance : 25,//25
+					dragLockToAxis		: true,
 					dragBlockHorizontal : true,
-					dragBlockVertical   : true,
-					dragMinDistance     : 0
+					dragBlockVertical   : true
 				})
 				.on('touch drag dragend transform', function(ev) {
 	      			if(!hasImg) return;
 
 		  			switch(ev.type) {
-					case 'touch':
-						last_scale = cont.scaleX;
+					case 'touch': //trigger per click
+						last_scale    = cont.scaleX;
 						last_rotation = cont.rotation;
-						
 						stage.update();
 					break;
 
 					case 'drag':
+						ev.gesture.preventDefault();
 						stage.update();
+						console.log( cont.x, cont.y );
 					break;
 
 					case 'dragend':
-						isResizing = false;
+						isPinching = false;
 					break;
 
 					case 'transform':
-						isResizing = true;
+						isPinching = true;
 						if(option.hasPinch){
 							newRotation = last_rotation + ev.gesture.rotation;
-							newScale = Math.max(1, Math.min(last_scale * ev.gesture.scale, 10));
+							newScale = Math.max(1, Math.min(last_scale * ev.gesture.scale, 10 ));
 						
 							cont.rotation = newRotation;
 							cont.scaleX = cont.scaleY = newScale;

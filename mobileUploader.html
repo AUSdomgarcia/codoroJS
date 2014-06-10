@@ -6,17 +6,18 @@
 </head>
 	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 
+	<meta http-equiv='cache-control' content='no-cache'>
+	<meta http-equiv='expires' content='0'>
+	<meta http-equiv='pragma' content='no-cache'>
+
 	<body>
  	<script type="text/javascript" src="js/jquery-1.11.1.js"></script>
 	<script type="text/javascript" src="js/easeljs-0.7.1.min.js?=1"></script>
 	<script type="text/javascript" src="js/hammer.js"></script>
 	<script type="text/javascript" src="js/h5uploader.js"></script>
-	<script type="text/javascript" src="js/base64.min.js"></script>
-
 
 	<div id="container"></div>
 	<script type="text/javascript">
-
 		/*	var option = {
 			hasRotation : true,
 			hasZoom     : true,
@@ -32,7 +33,7 @@
 		
 		$("#container")
 			.h5u({ scaleValue:0.10,
-				   wurl : "http://nwshare.ph/goldilocks/goldigoodtimes/easel/servertest.php"
+				   wurl : "upload.php"
 				})
 			.addCallback( function (data) {
 				console.log( data );

@@ -1,10 +1,10 @@
-div, canvas, button {
+div, canvas, button, form {
 	padding: 0px;
 	margin: 0px;
 }
 .h5u-canvas-size {
-	width: 500px;
-	height:500px;
+	width: 400px;
+	height:400px;
 }
 .h5u-right-nav {
 	position: absolute;
@@ -25,7 +25,6 @@ div, canvas, button {
 	left: 0px;
 	height: auto;
 	width: auto;
-	border: 1px solid red;
 	background-color: #181818;
 	opacity: 0.8;
 	z-index: 999;

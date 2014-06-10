@@ -1,6 +1,5 @@
 <?php 
 	$filename = "files";
-	
 	print_r($_FILES);
 
 	$allowedExts = array("gif", "jpeg", "jpg", "png");
