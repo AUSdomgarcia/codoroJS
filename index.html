@@ -17,6 +17,7 @@
 	<script type="text/javascript" src="js/h5uploader.js"></script>
 
 	<div id="container"></div>
+
 	<script type="text/javascript">
 		/*	var option = {
 			hasRotation : true,
@@ -34,12 +35,14 @@
 		$("#container")
 			.h5u({ scaleValue:0.10,
 				   wurl : "upload.php"
+				   ,hideSubmit : true
 				})
 			.addCallback( function (data) {
 				console.log( data );
 			});
-	</script>
 
+	</script>
+	<button type="button" onclick="$('#container').h5u().submitEntry();" style = "position: absolute; top: 500px; left: 10px;">BUTTON</button>
 
 	</body>
 </html>

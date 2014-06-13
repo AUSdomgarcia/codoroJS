@@ -1,7 +1,17 @@
-jQuery.fn.h5u = function(obj) 
-{
+jQuery.fn.h5u = function(obj) {
+	
+	if (typeof H5U.__instance[this.selector] == 'undefined') {
+		H5U.__instance[this.selector] = new H5U(obj, this[0] );
+	}
+	return H5U.__instance[this.selector];
+}
+
+H5U.__instance={};
+
+function H5U(obj, elem) {
 	var version = '1.1.5';
-	this.el = $(this[0]);
+	this.el = $(elem);
+
 		var option = { 
 			wurl		: "",
 			hasRotation : true,
@@ -11,6 +21,9 @@ jQuery.fn.h5u = function(obj)
 			rotateValue : 90,
 			zoomInCaption : 'z+',
 			zoomOutCaption : 'z-',
+
+			//special case: hide function
+			hideSubmit 	: false,
 
 			rotateIncreaseCaption : '<@',
 			rotateDecreaseCaption : '@>',
@@ -22,6 +35,8 @@ jQuery.fn.h5u = function(obj)
 
 		this.HTMLview = function()
 		{
+			 //console.log('init HTMLview');
+
 			this.el.addClass('h5u-canvas-size');
 			var canvasWidth  = this.el.width();
 			var canvasHeight = this.el.height();
@@ -65,43 +80,70 @@ jQuery.fn.h5u = function(obj)
 					 		+"</div>");
 
 			this.el.append("</form>");
-			
+
+			if(option.hideSubmit)
+				this.el.find("#h5u-submit-btn").hide();
+
 			//version
 			this.el.append("<br style='clear:both;'/><p>version "+version+"</p>");
 			this.el.find(".h5u-tpreload-wrapper").hide();
 		}
 
-		this.initCanvas = function()
-		{
-			var that = this;
-
-			this.updatePreloader = function( curVal ){
-				var newProp = { width : curVal+"%" }
-					self.el.find('.h5u-tpreload-bar').css( newProp );
-					curVal = Math.floor(curVal);
-					self.el.find('.h5u-error-content').html( curVal + "%" );
+		this.dataURItoBlob = function(dataURI) {
+			// convert base64 to raw binary data held in a string
+			// doesn't handle URLEncoded DataURIs
+			var byteString;
+			if (dataURI.split(',')[0].indexOf('base64') >= 0)
+			    byteString = atob(dataURI.split(',')[1]);
+			else
+			    byteString = unescape(dataURI.split(',')[1]);
+			// separate out the mime component
+			var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+			// write the bytes of the string to an ArrayBuffer
+			var ab = new ArrayBuffer(byteString.length);
+			var ia = new Uint8Array(ab);
+			for (var i = 0; i < byteString.length; i++) {
+			    ia[i] = byteString.charCodeAt(i);
 			}
+			// write the ArrayBuffer to a blob, and you're done
+			return new Blob([ab],{type: mimeString});
+		}
+
+		this.updatePreloader = function( curVal ){
+			var newProp = { width : curVal+"%" }
+				self.el.find('.h5u-tpreload-bar').css( newProp );
+				curVal = Math.floor(curVal);
+				self.el.find('.h5u-error-content').html( curVal + "%" );
+		}
+
+		
+
+		this.initCanvas = function() {
+
+			 //console.log('init canvas');
+			var that = this;
 			//FOCUS HERE! added 4 events
 			this.uploadProgress = function(evt){
 				var percentComplete;
 				if(evt.lengthComputable){
 					percentComplete = Math.round((evt.loaded * 90 )/evt.total);
-					that.updatePreloader( percentComplete );
+					self.updatePreloader( percentComplete );
 				} else {
 					console.log( 'unable to compute');
 				}
 			}
 			this.uploadComplete = function(){
-				that.updatePreloader( 100 );
+				self.updatePreloader( 100 );
 				setTimeout(function(){
-				document.getElementById("h5u-zoomin").disabled=false;
-				document.getElementById("h5u-zoomout").disabled=false;
-				document.getElementById("h5u-rotleft").disabled=false;
-				document.getElementById("h5u-rotright").disabled=false;
-				document.getElementById("h5u-browse-btn").disabled=false;
-				document.getElementById("h5u-submit-btn").disabled=false;
+				
+				self.el.find("#h5u-zoomin").prop('disabled',false);
+				self.el.find("#h5u-zoomout").prop('disabled',false);
+				self.el.find("#h5u-rotleft").prop('disabled',false);
+				self.el.find("#h5u-rotright").prop('disabled',false);
+				self.el.find("#h5u-browse-btn").prop('disabled',false);
+				self.el.find("#h5u-submit-btn").prop('disabled',false);
 
-					self.find("#h5u-error-wrapper").hide();
+					self.el.find("#h5u-error-wrapper").hide();
 					isProcessing = false;
 					self._callback("upload complete");
 				},1000);
@@ -112,26 +154,6 @@ jQuery.fn.h5u = function(obj)
 			}
 			this.uploadCanceled = function(){
 				alert('The upload has been canceled by the user or the browser dropped the connection');	
-			}
-
-			this.dataURItoBlob = function(dataURI) {
-				// convert base64 to raw binary data held in a string
-				// doesn't handle URLEncoded DataURIs
-				var byteString;
-				if (dataURI.split(',')[0].indexOf('base64') >= 0)
-				    byteString = atob(dataURI.split(',')[1]);
-				else
-				    byteString = unescape(dataURI.split(',')[1]);
-				// separate out the mime component
-				var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-				// write the bytes of the string to an ArrayBuffer
-				var ab = new ArrayBuffer(byteString.length);
-				var ia = new Uint8Array(ab);
-				for (var i = 0; i < byteString.length; i++) {
-				    ia[i] = byteString.charCodeAt(i);
-				}
-				// write the ArrayBuffer to a blob, and you're done
-				return new Blob([ab],{type: mimeString});
 			}
 
 			this.postForm = function ( blob ){
@@ -149,7 +171,7 @@ jQuery.fn.h5u = function(obj)
 				xhr.addEventListener('load',  that.uploadComplete,false);
 				xhr.addEventListener('error', that.uploadFailed,false);
 				xhr.addEventListener('abort', that.uploadCanceled,false);
-				xhr.open('POST', 'upload.php');
+				xhr.open('POST', option.wurl );
 				xhr.send(fd);
 			}
 
@@ -163,22 +185,21 @@ jQuery.fn.h5u = function(obj)
 				if(!hasImg) return;
 				if(isProcessing) return;
 
-				document.getElementById("h5u-zoomin").disabled=true;
-				document.getElementById("h5u-zoomout").disabled=true;
-				document.getElementById("h5u-rotleft").disabled=true;
-				document.getElementById("h5u-rotright").disabled=true;
-
-				document.getElementById("h5u-browse-btn").disabled=true;
-				document.getElementById("h5u-submit-btn").disabled=true;
+				self.el.find("#h5u-zoomin").prop('disabled',true);
+				self.el.find("#h5u-zoomout").prop('disabled',true);
+				self.el.find("#h5u-rotleft").prop('disabled',true);
+				self.el.find("#h5u-rotright").prop('disabled',true);
+				self.el.find("#h5u-browse-btn").prop('disabled',true);
+				self.el.find("#h5u-submit-btn").prop('disabled',true);
 
 				var dataURL = canvas.toDataURL();
-				var binary = that.dataURItoBlob( dataURL );
+				var binary = self.dataURItoBlob( dataURL );
 				
 				self.el.find(".h5u-tpreload-wrapper").stop().slideDown(
 					500, 
 					function(){  // self._callback( binary ); @args to external
 						isProcessing = true;
-						that.updatePreloader(1);
+						self.updatePreloader(1);
 						self.postForm( binary );
 						self.el.find("#h5u-error-wrapper").show();
 					}
@@ -187,16 +208,16 @@ jQuery.fn.h5u = function(obj)
 
 			//Canvas 
 			var stage;
-			var hasImg = false;
 			var bitmapHolder;
 			var shape = new createjs.Shape();
 			var cont = new createjs.Container();
 			var imgConvert = new Image();
 			var originalRegistry = [];
 
-			canvas = document.getElementById('h5u-canvas-base');
+			canvas = self.el.find('#h5u-canvas-base')[0];
+			//console.log( document.getElementById('h5u-canvas-base') );
+
 			stage = new createjs.Stage(canvas);
-			
 			createjs.Touch.enable(stage);
 			stage.enableMouseOver(10);
 			stage.mouseMoveOutside = false;
@@ -225,7 +246,7 @@ jQuery.fn.h5u = function(obj)
 			this.copyToCanvas = function ( value ) {
 				if(bitmapHolder) that.resetImg();
 
-				that.updatePreloader(1);
+				self.updatePreloader(1);
 				
 				hasImg = true;
 				imgConvert = new Image();
@@ -240,7 +261,7 @@ jQuery.fn.h5u = function(obj)
 				bitmapHolder = new createjs.Bitmap(imgConvert);
 				
 				//Resizing bitmaps
-				console.log( bitmapHolder.getBounds().width, bitmapHolder.getBounds().height );
+				//console.log( bitmapHolder.getBounds().width, bitmapHolder.getBounds().height );
 				
 				var bmpWidth = bitmapHolder.getBounds().width;
 				var bmpHeight = bitmapHolder.getBounds().height;
@@ -356,7 +377,7 @@ jQuery.fn.h5u = function(obj)
 					case 'drag':
 						ev.gesture.preventDefault();
 						stage.update();
-						console.log( cont.x, cont.y );
+						//console.log( cont.x, cont.y );
 					break;
 
 					case 'dragend':
@@ -404,14 +425,45 @@ jQuery.fn.h5u = function(obj)
 			}
 			return self;
 		}
+
+
+		this.submitEntry = function(){
+			if(!hasImg) return;
+			if(isProcessing) return;
+
+			self.el.find("h5u-zoomin").prop('disabled',true);
+			self.el.find("h5u-zoomout").prop('disabled',true);
+			self.el.find("h5u-rotleft").prop('disabled',true);
+			self.el.find("h5u-rotright").prop('disabled',true);
+
+			self.el.find("h5u-browse-btn").prop('disabled',true);
+			self.el.find("h5u-submit-btn").prop('disabled',true);
+
+			var dataURL = canvas.toDataURL();
+			var binary = self.dataURItoBlob( dataURL );
+			
+			self.el.find(".h5u-tpreload-wrapper").stop().slideDown(
+				500, 
+				function(){  // self._callback( binary ); @args to external
+					isProcessing = true;
+					self.updatePreloader(1);
+					self.postForm( binary );
+					self.el.find("#h5u-error-wrapper").show();
+				}
+			);
+		}
 		
+	var hasImg = false;
 	var file_name;
 	var isProcessing = false;
 	var self = this;
+
 	self.HTMLview();
 	self.initCanvas();
 	return this;
-};
+}
+
+
 
 
 
