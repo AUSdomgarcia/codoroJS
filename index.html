@@ -16,10 +16,14 @@
 	<script type="text/javascript" src="js/hammer.js"></script>
 	<script type="text/javascript" src="js/h5uploader.js"></script>
 
-	<div id="container"></div>
+	<div id="container1"></div>
+	<div id="container2"></div>
+	<div id="container3"></div>
+	<div id="container4"></div>
 
 	<script type="text/javascript">
 		/*	var option = {
+			wurl		: "",
 			hasRotation : true,
 			hasZoom     : true,
 			hasPinch	: true,
@@ -28,21 +32,51 @@
 			zoomInCaption : 'z+',
 			zoomOutCaption : 'z-',
 
+			//special case: hide function
+			hideSubmit 	: false,
+
 			rotateIncreaseCaption : '<@',
 			rotateDecreaseCaption : '@>',
 		}*/
-		
-		$("#container")
+
+		$("#container1")
 			.h5u({ scaleValue:0.10,
 				   wurl : "upload.php"
-				   ,hideSubmit : true
+				   ,hideSubmit : false
 				})
 			.addCallback( function (data) {
 				console.log( data );
 			});
 
+		$("#container2")
+			.h5u({ scaleValue:0.10,
+				   wurl : "upload.php"
+				   ,hideSubmit : false
+				})
+			.addCallback( function (data) {
+				console.log( data );
+			});
+
+		$("#container3")
+		.h5u({ scaleValue:0.10,
+			   wurl : "upload.php"
+			   ,hideSubmit : false
+			})
+		.addCallback( function (data) {
+			console.log( data );
+		});
+
+		$("#container4")
+		.h5u({ scaleValue:0.10,
+			   wurl : "upload.php"
+			   ,hideSubmit : false
+			})
+		.addCallback( function (data) {
+			console.log( data );
+		});
+
 	</script>
-	<button type="button" onclick="$('#container').h5u().submitEntry();" style = "position: absolute; top: 500px; left: 10px;">BUTTON</button>
+	<button type="button" onclick="$('#container').h5u().submitEntry();" style = "position: absolute; top: 540px; left: 10px;">BUTTON</button>
 
 	</body>
 </html>

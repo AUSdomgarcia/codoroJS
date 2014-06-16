@@ -9,7 +9,7 @@ jQuery.fn.h5u = function(obj) {
 H5U.__instance={};
 
 function H5U(obj, elem) {
-	var version = '1.1.5';
+	var version = '1.1.6';
 	this.el = $(elem);
 
 		var option = { 
@@ -35,20 +35,24 @@ function H5U(obj, elem) {
 
 		this.HTMLview = function()
 		{
-			 //console.log('init HTMLview');
+			this.el.append("<div id='main-wrapper'></div>");
+			var mainWrapper = this.el.find("#main-wrapper");
+				mainWrapper.append("<div class='h5u-canvas-bg'></div>");
+			
+			var canvasProperty = this.el.find(".h5u-canvas-bg");
+			var canvasWidth  = canvasProperty.width();
+			var canvasHeight = canvasProperty.height();
 
-			this.el.addClass('h5u-canvas-size');
-			var canvasWidth  = this.el.width();
-			var canvasHeight = this.el.height();
+			mainWrapper.append("<canvas id='canvasNode' style='position:absolute;top:1px;left:1px;' width='"+canvasWidth+"' height='"+canvasHeight+"'></canvas>");
 
-			this.el.append("<div id='h5u-error-wrapper'>"
+			mainWrapper.append("<div id='h5u-error-wrapper'>"
 						  +"<div class='h5u-error-content'>0%</div>"
 						  +"</div>");
 
-			this.el.find("#h5u-error-wrapper").css({ width: canvasWidth, height: canvasHeight });
-			this.el.find("#h5u-error-wrapper").hide();
+			mainWrapper.find("#h5u-error-wrapper").css({ width: canvasWidth, height: canvasHeight });
+			mainWrapper.find("#h5u-error-wrapper").hide();
 
-			this.el.append("<div class='h5u-right-nav'></div>");
+			mainWrapper.append("<div class='h5u-right-nav'></div>");
 			var rightNav = self.el.find('.h5u-right-nav');
 
 			if(option.hasZoom){
@@ -61,32 +65,29 @@ function H5U(obj, elem) {
 							   +"<button id='h5u-rotright' class='h5u-right-nav-des'>"+option.rotateDecreaseCaption+"</button>");
 			}
 
-			this.el.append("<canvas id='h5u-canvas-base' width='"+canvasWidth
-							+"' height='"+canvasHeight+"'></canvas>");
+			mainWrapper.append("<form id='form1' enctype='multipart/form-data' method='post' action='"+ option.wurl +"'>");
 
-			this.el.append("<form id='form1' enctype='multipart/form-data' method='post' action='"+ option.wurl +"'>");
-
-			this.el.append("<input type='file' id='h5u-file-input' name='files'/>"
-					 		+"<div style='width: auto;'>"
-
-					 		//preloader
-					 		+"<div class='h5u-tpreload-wrapper'>"
-						    +"<div class='h5u-tpreload-bar'></div>"
-						    +"</div>"
+			mainWrapper.append("<input type='file' id='h5u-file-input' name='files'/>"
+					 		
+							//preloader
+					 		+"<div style='width:"+(canvasWidth+2+'px')+";'>" /*style='width: auto;'*/
+					 			+"<div class='h5u-tpreload-wrapper'>"
+						    		+"<div class='h5u-tpreload-bar'></div>"
+						    	+"</div>"
 							
-							//button nav
-							+"<button id='h5u-browse-btn' class='h5u-bottom-nav'>Browse File</button>"
-					 		+"<button id='h5u-submit-btn' class='h5u-bottom-nav'>Submit Entry</button>"
+								//button nav
+								+"<button id='h5u-browse-btn' class='h5u-bottom-nav'>Browse File</button>"
+					 			+"<button id='h5u-submit-btn' class='h5u-bottom-nav'>Submit Entry</button>"
 					 		+"</div>");
 
-			this.el.append("</form>");
+			mainWrapper.append("</form>");
 
 			if(option.hideSubmit)
-				this.el.find("#h5u-submit-btn").hide();
+				mainWrapper.find("#h5u-submit-btn").hide();
 
 			//version
-			this.el.append("<br style='clear:both;'/><p>version "+version+"</p>");
-			this.el.find(".h5u-tpreload-wrapper").hide();
+			mainWrapper.append("<br style='clear:both;'/><p>version "+version+"</p>");
+			mainWrapper.find(".h5u-tpreload-wrapper").hide();
 		}
 
 		this.dataURItoBlob = function(dataURI) {
@@ -208,13 +209,14 @@ function H5U(obj, elem) {
 
 			//Canvas 
 			var stage;
+			var canvas;
 			var bitmapHolder;
 			var shape = new createjs.Shape();
 			var cont = new createjs.Container();
 			var imgConvert = new Image();
 			var originalRegistry = [];
 
-			canvas = self.el.find('#h5u-canvas-base')[0];
+			canvas = self.el.find('#canvasNode')[0];//self.el.find('#h5u-canvas-base')[0];
 			//console.log( document.getElementById('h5u-canvas-base') );
 
 			stage = new createjs.Stage(canvas);
