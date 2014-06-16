@@ -1,18 +1,40 @@
-<script type="text/javascript">
-	/*var option = {
-	      hasRotation : true,
-	      hasZoom     : true,
-	      hasPinch	: true,
-	      scaleValue  : 0.05,
-	      rotateValue : 90,
-	      zoomInCaption : 'z+',
-	      zoomOutCaption : 'z-',
-	      rotateIncreaseCaption : '<@',
-	      rotateDecreaseCaption : '@>' }*/
+<div id="container1"></div>
+	<div id="container2"></div>
+	<div id="container3"></div>
+	<div id="container4"></div>
 
-	$("#container")
-		.h5u({ scaleValue:0.10 })
+	$("#container1")
+		.h5u({ scaleValue:0.10,
+			wurl : "upload.php"
+			,hideSubmit : false
+		})
 		.addCallback( function (data) {
-			console.log("base64:",data);
+			console.log( data );
 		});
-</script>
+	
+	$("#container2")
+		.h5u({ scaleValue:0.10,
+			   wurl : "upload.php"
+			   ,hideSubmit : false
+			})
+		.addCallback( function (data) {
+			console.log( data );
+		});
+	
+	$("#container3")
+	.h5u({ scaleValue:0.10,
+		   wurl : "upload.php"
+		   ,hideSubmit : false
+		})
+	.addCallback( function (data) {
+		console.log( data );
+	});
+	
+	$("#container4")
+	.h5u({ scaleValue:0.10,
+		   wurl : "upload.php"
+		   ,hideSubmit : false
+		})
+	.addCallback( function (data) {
+		console.log( data );
+	});
