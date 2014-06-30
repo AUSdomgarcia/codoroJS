@@ -42,13 +42,21 @@
 		$("#container1")
 			.h5u({ scaleValue:0.10,
 				   wurl : "upload.php"
-				   ,hideSubmit : false
+				   , hideSubmit : false
+				})
+			.addCallback( function (data) {
+				console.log( data );
+			});
+			$("#container2")
+			.h5u({ scaleValue:0.10,
+				   wurl : "upload.php"
+				   , hideSubmit : false
 				})
 			.addCallback( function (data) {
 				console.log( data );
 			});
 
-		$("#container2")
+		/*$("#container2")
 			.h5u({ scaleValue:0.10,
 				   wurl : "upload.php"
 				   ,hideSubmit : false
@@ -73,10 +81,11 @@
 			})
 		.addCallback( function (data) {
 			console.log( data );
-		});
+		});*/
 
 	</script>
-	<button type="button" onclick="$('#container').h5u().submitEntry();" style = "position: absolute; top: 540px; left: 10px;">BUTTON</button>
+
+	<button type="button" onclick="$('#container1').h5u().submitEntry();" style = "position: absolute; top: 490px; left: 10px;">BUTTON</button>
 
 	</body>
 </html>

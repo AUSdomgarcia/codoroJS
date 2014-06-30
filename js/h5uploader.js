@@ -35,8 +35,8 @@ function H5U(obj, elem) {
 
 		this.HTMLview = function()
 		{
-			this.el.append("<div id='main-wrapper'></div>");
-			var mainWrapper = this.el.find("#main-wrapper");
+			this.el.append("<div class='main-wrapper'></div>");
+			var mainWrapper = this.el.find(".main-wrapper");
 				mainWrapper.append("<div class='h5u-canvas-bg'></div>");
 			
 			var canvasProperty = this.el.find(".h5u-canvas-bg");
@@ -209,14 +209,15 @@ function H5U(obj, elem) {
 
 			//Canvas 
 			var stage;
-			var canvas;
+			
 			var bitmapHolder;
 			var shape = new createjs.Shape();
 			var cont = new createjs.Container();
 			var imgConvert = new Image();
 			var originalRegistry = [];
 
-			canvas = self.el.find('#canvasNode')[0];//self.el.find('#h5u-canvas-base')[0];
+			canvas = self.el.find('#canvasNode')[0];
+			//self.el.find('#h5u-canvas-base')[0];
 			//console.log( document.getElementById('h5u-canvas-base') );
 
 			stage = new createjs.Stage(canvas);
@@ -429,7 +430,7 @@ function H5U(obj, elem) {
 		}
 
 
-		this.submitEntry = function(){
+		this.submitEntry = function(){ console.log('something');
 			if(!hasImg) return;
 			if(isProcessing) return;
 
@@ -459,6 +460,7 @@ function H5U(obj, elem) {
 	var file_name;
 	var isProcessing = false;
 	var self = this;
+	var canvas;
 
 	self.HTMLview();
 	self.initCanvas();
