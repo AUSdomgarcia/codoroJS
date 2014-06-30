@@ -35,8 +35,8 @@ function H5U(obj, elem) {
 
 		this.HTMLview = function()
 		{
-			this.el.append("<div class='main-wrapper'></div>");
-			var mainWrapper = this.el.find(".main-wrapper");
+			this.el.append("<div class='h5u-main-wrapper'></div>");
+			var mainWrapper = this.el.find(".h5u-main-wrapper");
 				mainWrapper.append("<div class='h5u-canvas-bg'></div>");
 			
 			var canvasProperty = this.el.find(".h5u-canvas-bg");

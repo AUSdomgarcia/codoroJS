@@ -4,8 +4,10 @@ div, canvas, button, form {
 	margin: 0px;
 }
 
+
 #container1 {
 	position: relative;
+	display: inline-block;
 }
 #container2 {
 	position: relative;
@@ -15,6 +17,10 @@ div, canvas, button, form {
 }
 #container4 {
 	position: relative;
+}
+
+.h5u-main-wrapper {
+	display: block;
 }
 
 .h5u-canvas-size {
